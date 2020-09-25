@@ -1,0 +1,19 @@
+---
+- name: Ansible Playbook for hardening
+  hosts: all
+  remote_user: ubuntu
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Remove qemu-guest-agent package
+      package:
+        name: qemu-guest-agent
+        state: absent
+    - name: Install wget package
+      package:
+        name: wget
+        state: present
+    - name: Disallow password authentication
+      lineinfile: dest=/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
+    - name: Disallow root SSH access
+      lineinfile: dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
